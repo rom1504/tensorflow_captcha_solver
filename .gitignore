@@ -1,0 +1,5 @@
+venv
+extracted_letter_images
+__pycache__
+captcha_model.hdf5
+model_labels.dat
