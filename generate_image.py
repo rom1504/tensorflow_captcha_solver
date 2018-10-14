@@ -1,6 +1,14 @@
+import os
+
 from PIL import Image, ImageDraw, ImageFont
 import random
 import glob
+
+OUTPUT_DIR = 'generated_captcha_images2/'
+
+# if the output directory does not exist, create it
+if not os.path.exists(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
 
 fonts = []
 with open("fonts.txt") as f:
@@ -27,5 +35,5 @@ for i in range(0, 10000):
     d = ImageDraw.Draw(img)
     font = random.choice(fonts)
     d.text((1, 5), word, font=font, fill=(0))
-    img.save('generated_captcha_images2/' + word + '.png')
+    img.save(OUTPUT_DIR + word + '.png')
     words.add(word)
