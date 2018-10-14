@@ -1,6 +1,6 @@
 ### Before you get started
 
-code from https://medium.com/@ageitgey/how-to-break-a-captcha-system-in-15-minutes-with-machine-learning-dbebb035a710
+code based on https://medium.com/@ageitgey/how-to-break-a-captcha-system-in-15-minutes-with-machine-learning-dbebb035a710
 
 To run these scripts, you need the following installed:
 
@@ -10,6 +10,10 @@ To run these scripts, you need the following installed:
    https://www.pyimagesearch.com/opencv-tutorials-resources-guides/ 
 3. The python libraries listed in requirements.txt
  - Try running "pip3 install -r requirements.txt"
+ 
+### Step 0: Generate images
+
+python3 generate_image.py
 
 ### Step 1: Extract single letters from CAPTCHA images
 

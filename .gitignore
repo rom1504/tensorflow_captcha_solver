@@ -1,5 +1,7 @@
 venv
 extracted_letter_images
+generated_captcha_images2
 __pycache__
 captcha_model.hdf5
 model_labels.dat
+test

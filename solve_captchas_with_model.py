@@ -1,3 +1,4 @@
+from PIL import Image
 from keras.models import load_model
 from helpers import resize_to_fit
 from imutils import paths
@@ -9,7 +10,7 @@ import pickle
 
 MODEL_FILENAME = "captcha_model.hdf5"
 MODEL_LABELS_FILENAME = "model_labels.dat"
-CAPTCHA_IMAGE_FOLDER = "generated_captcha_images"
+CAPTCHA_IMAGE_FOLDER = "annotated"
 
 
 # Load up the model labels (so we can translate model predictions to actual letters)
@@ -25,17 +26,67 @@ model = load_model(MODEL_FILENAME)
 captcha_image_files = list(paths.list_images(CAPTCHA_IMAGE_FOLDER))
 captcha_image_files = np.random.choice(captcha_image_files, size=(10,), replace=False)
 
+def img_to_opencv(image):
+    open_cv_image = np.array(image)
+    # Convert RGB to BGR
+    open_cv_image = open_cv_image[:, :, ::-1].copy()
+    return open_cv_image
+
+def alpha_composite(front, back):
+    """Alpha composite two RGBA images.
+
+    Source: http://stackoverflow.com/a/9166671/284318
+
+    Keyword Arguments:
+    front -- PIL RGBA Image object
+    back -- PIL RGBA Image object
+
+    """
+    front = np.asarray(front)
+    back = np.asarray(back)
+    result = np.empty(front.shape, dtype='float')
+    alpha = np.index_exp[:, :, 3:]
+    rgb = np.index_exp[:, :, :3]
+    falpha = front[alpha] / 255.0
+    balpha = back[alpha] / 255.0
+    result[alpha] = falpha + balpha * (1 - falpha)
+    old_setting = np.seterr(invalid='ignore')
+    result[rgb] = (front[rgb] * falpha + back[rgb] * balpha * (1 - falpha)) / result[alpha]
+    np.seterr(**old_setting)
+    result[alpha] *= 255
+    np.clip(result, 0, 255)
+    # astype('uint8') maps np.nan and np.inf to 0
+    result = result.astype('uint8')
+    result = Image.fromarray(result, 'RGBA')
+    return result
+
+def alpha_composite_with_color(image, color=(255, 255, 255)):
+    """Alpha composite an RGBA image with a single color image of the
+    specified color and the same size as the original image.
+
+    Keyword Arguments:
+    image -- PIL RGBA Image object
+    color -- Tuple r, g, b (default 255, 255, 255)
+
+    """
+    back = Image.new('RGBA', size=image.size, color=color + (255,))
+    return alpha_composite(image, back)
+
 # loop over the image paths
 for image_file in captcha_image_files:
     # Load the image and convert it to grayscale
-    image = cv2.imread(image_file)
+
+
+    image = img_to_opencv(alpha_composite_with_color(Image.open(image_file).convert('RGBA')))
+
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Add some extra padding around the image
-    image = cv2.copyMakeBorder(image, 20, 20, 20, 20, cv2.BORDER_REPLICATE)
+    image = cv2.copyMakeBorder(image, 8, 8, 8, 8, cv2.BORDER_CONSTANT, value=(255, 0, 0))
 
     # threshold the image (convert it to pure black and white)
     thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
 
     # find the contours (continuous blobs of pixels) the image
     contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -65,7 +116,7 @@ for image_file in captcha_image_files:
 
     # If we found more or less than 4 letters in the captcha, our letter extraction
     # didn't work correcly. Skip the image instead of saving bad training data!
-    if len(letter_image_regions) != 4:
+    if len(letter_image_regions) != 5:
         continue
 
     # Sort the detected letter images based on the x coordinate to make sure
