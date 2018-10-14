@@ -15,7 +15,9 @@ To run these scripts, you need the following installed:
 
 1. Python 3
 2. The python libraries listed in requirements.txt
- - Try running "pip3 install -r requirements.txt"
+ - virtualenv --python=/usr/bin/python3 venv
+ - source venv/bin/activate
+ - pip3 install -r requirements.txt
  
 you may regenerate the acceptable font by running python3 generate_acceptable_fontlist.py
 

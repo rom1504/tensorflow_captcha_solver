@@ -26,7 +26,7 @@ def font_contains_letter_digit(filename):
 
 
 fonts = []
-with open('fonts.txt', 'a') as the_file:
+with open('fonts.txt', 'w') as the_file:
     for filename in glob.iglob('/usr/share/fonts/truetype/**/*.ttf', recursive=True):
         if font_contains_letter_digit(filename):
             print("adding "+filename)
