@@ -33,7 +33,6 @@ def solve():
 
     if request.args.get('show_image') == "1":
         img_str = base64.b64encode(image.getvalue())
-        print(img_str)
         captcha_text += '<img src="data:image/png;base64,' + img_str.decode("utf-8") + '" />'
 
     return captcha_text
