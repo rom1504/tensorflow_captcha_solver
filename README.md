@@ -5,12 +5,11 @@ code based on https://medium.com/@ageitgey/how-to-break-a-captcha-system-in-15-m
 To run these scripts, you need the following installed:
 
 1. Python 3
-2. OpenCV 3 w/ Python extensions
- - I highly recommend these OpenCV installation guides: 
-   https://www.pyimagesearch.com/opencv-tutorials-resources-guides/ 
-3. The python libraries listed in requirements.txt
+2. The python libraries listed in requirements.txt
  - Try running "pip3 install -r requirements.txt"
  
+you may regenerate the acceptable font by running python3 generate_acceptable_fontlist.py
+
 Run pipeline.sh or :
  
 ### Step 0: Generate images

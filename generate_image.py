@@ -2,11 +2,16 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 import glob
 
-
 fonts = []
+with open("fonts.txt") as f:
+    content = f.readlines()
+
+acceptable_fonts = set(x.strip() for x in content)
+
 
 for filename in glob.iglob('/usr/share/fonts/truetype/**/*.ttf', recursive=True):
-    fonts.append(ImageFont.truetype(filename, 15))
+    if filename in acceptable_fonts:
+        fonts.append(ImageFont.truetype(filename, 15))
 
 words = set()
 for i in range(0, 10000):
@@ -22,5 +27,5 @@ for i in range(0, 10000):
     d = ImageDraw.Draw(img)
     font = random.choice(fonts)
     d.text((1, 5), word, font=font, fill=(0))
-    img.save('generated_captcha_images2/' + word +'.png')
+    img.save('generated_captcha_images2/' + word + '.png')
     words.add(word)
