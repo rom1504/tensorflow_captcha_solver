@@ -53,4 +53,5 @@ python3 solve_captchas_with_model.py
 
 python3 flask_endpoint.py
 
-then go to http://127.0.0.1:5000/?url=http://somecaptcha.url/
+then go to `http://127.0.0.1:5000/?url=http://somecaptcha.url/`
+or `http://127.0.0.1:5000/?url=http://somecaptcha.url/&show_image=1` to see the image too

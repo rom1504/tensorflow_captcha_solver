@@ -2,6 +2,7 @@ from flask import Flask
 import requests
 from flask import request
 from io import BytesIO
+import base64
 
 from captcha_solver import load_captcha_model, solve_captcha
 
@@ -30,11 +31,16 @@ def solve():
     if captcha_text == "":
         return "failure"
 
+    if request.args.get('show_image') == "1":
+        img_str = base64.b64encode(image.getvalue())
+        print(img_str)
+        captcha_text += '<img src="data:image/png;base64,' + img_str.decode("utf-8") + '" />'
+
     return captcha_text
+
 
 if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
-"please wait until server has fully started"))
+           "please wait until server has fully started"))
     init()
     app.run(threaded=True)
-
