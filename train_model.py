@@ -23,8 +23,11 @@ labels = []
 # loop over the input images
 for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     # Load the image and convert it to grayscale
-    image = cv2.imread(image_file)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    try:
+        image = cv2.imread(image_file)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    except:
+        continue
 
     # Resize the letter so it fits in a 20x20 pixel box
     image = resize_to_fit(image, 20, 20)
@@ -79,7 +82,7 @@ model.add(Dense(36, activation="softmax"))
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
 # Train the neural network
-model.fit(X_train, Y_train, validation_data=(X_test, Y_test), batch_size=32, epochs=1, verbose=1)
+model.fit(X_train, Y_train, validation_data=(X_test, Y_test), batch_size=32, epochs=2, verbose=1)
 
 # Save the trained model to disk
 model.save(MODEL_FILENAME)

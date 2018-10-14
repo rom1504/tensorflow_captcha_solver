@@ -1,11 +1,12 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
+import glob
 
-fonts = [
-    ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', 15),
-    ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', 15),
-    ImageFont.truetype('/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf', 13)
-]
+
+fonts = []
+
+for filename in glob.iglob('/usr/share/fonts/truetype/**/*.ttf', recursive=True):
+    fonts.append(ImageFont.truetype(filename, 15))
 
 words = set()
 for i in range(0, 10000):
@@ -15,10 +16,11 @@ for i in range(0, 10000):
     if word in words:
         continue
 
-    img = Image.new("1", (50, 20))
+    img = Image.new("1", (70, 40))
     img.paste((1), [0, 0, img.size[0], img.size[1]])
 
     d = ImageDraw.Draw(img)
-    d.text((1, 5), word, font=random.choice(fonts), fill=(0))
-    img.save('generated_captcha_images2/' + word + '.png')
+    font = random.choice(fonts)
+    d.text((1, 5), word, font=font, fill=(0))
+    img.save('generated_captcha_images2/' + word +'.png')
     words.add(word)

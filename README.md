@@ -11,6 +11,8 @@ To run these scripts, you need the following installed:
 3. The python libraries listed in requirements.txt
  - Try running "pip3 install -r requirements.txt"
  
+Run pipeline.sh or :
+ 
 ### Step 0: Generate images
 
 python3 generate_image.py
