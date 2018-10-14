@@ -6,3 +6,5 @@ keras
 pillow
 opencv-python
 fonttools
+flask
+requests

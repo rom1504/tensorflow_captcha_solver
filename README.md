@@ -48,3 +48,9 @@ This will write out "captcha_model.hdf5" and "model_labels.dat"
 Run: 
 
 python3 solve_captchas_with_model.py
+
+### Step 4: use the flask endpoint
+
+python3 flask_endpoint.py
+
+then go to http://127.0.0.1:5000/?url=http://somecaptcha.url/
