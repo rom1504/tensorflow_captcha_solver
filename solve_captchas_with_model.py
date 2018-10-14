@@ -1,15 +1,14 @@
 from imutils import paths
 import numpy as np
 
-from captcha_solver import solve_captcha, load_captcha_model, load_labels
+from captcha_solver import solve_captcha, load_captcha_model
 
 
 MODEL_FILENAME = "captcha_model.hdf5"
 MODEL_LABELS_FILENAME = "model_labels.dat"
 CAPTCHA_IMAGE_FOLDER = "annotated"
 
-lb = load_labels(MODEL_LABELS_FILENAME)
-model = load_captcha_model(MODEL_FILENAME)
+model = load_captcha_model(MODEL_FILENAME, MODEL_LABELS_FILENAME)
 
 
 # Grab some random CAPTCHA images to test against.
@@ -22,7 +21,7 @@ captcha_image_files = np.random.choice(captcha_image_files, size=(10,), replace=
 # loop over the image paths
 for image_file in captcha_image_files:
 
-    captcha_text = solve_captcha(image_file, model, lb)
+    captcha_text = solve_captcha(image_file, model)
 
     if captcha_text == "":
         continue

@@ -3,24 +3,24 @@ from helpers import resize_to_fit
 import numpy as np
 import pickle
 from image_preprocessor import preprocess_image
+import tensorflow as tf
 
 
-def load_captcha_model(model_filename = "captcha_model.hdf5"):
+def load_captcha_model(model_filename = "captcha_model.hdf5", labels_filename = "model_labels.dat"):
     # Load the trained neural network
     model = load_model(model_filename)
 
-    return model
+    graph = tf.get_default_graph()
 
-
-def load_labels(labels_filename = "model_labels.dat"):
     # Load up the model labels (so we can translate model predictions to actual letters)
     with open(labels_filename, "rb") as f:
         lb = pickle.load(f)
 
-    return lb
+    return (model, graph, lb)
 
 
-def solve_captcha(image_file, model, lb):
+def solve_captcha(image_file, model_data):
+    (model, graph, lb) = model_data
     letter_images = preprocess_image(image_file)
 
     if not letter_images:
@@ -39,8 +39,9 @@ def solve_captcha(image_file, model, lb):
         letter_image = np.expand_dims(letter_image, axis=2)
         letter_image = np.expand_dims(letter_image, axis=0)
 
-        # Ask the neural network to make a prediction
-        prediction = model.predict(letter_image)
+        with graph.as_default():
+            # Ask the neural network to make a prediction
+            prediction = model.predict(letter_image)
 
         # Convert the one-hot-encoded prediction back to a normal letter
         letter = lb.inverse_transform(prediction)[0]
