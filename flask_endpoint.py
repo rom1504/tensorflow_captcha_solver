@@ -22,7 +22,7 @@ def init():
 def solve():
     url = request.args.get('url')
 
-    response = requests.get(url, verify=False)
+    response = requests.get(url, verify=False, cookies=request.cookies)
 
     image = BytesIO(response.content)
 
