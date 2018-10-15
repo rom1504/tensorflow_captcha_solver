@@ -21,6 +21,9 @@ To run these scripts, you need the following installed:
  
 you may regenerate the acceptable font by running python3 generate_acceptable_fontlist.py
 
+installing `msttcorefonts` provide more fonts hence better results
+(that was useful in my case to distinguish O and 0)
+
 Run pipeline.sh or :
  
 ### Step 0: Generate images
